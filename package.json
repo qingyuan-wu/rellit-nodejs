@@ -4,11 +4,13 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "start": "node index.js",
     "test": "npm test"
   },
   "author": "Qingyuan Wu",
   "license": "ISC",
   "dependencies": {
+    "@google-cloud/datastore": "^7.0.0",
     "ejs": "^3.1.8",
     "express": "^4.18.1"
   },

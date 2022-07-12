@@ -33,3 +33,13 @@ gcloud datastore indexes create index.yaml
 ```
 * Navigate to [the Datastore console](https://console.cloud.google.com/datastore/indexes?authuser=0&project=summer22-sps-52) and wait a few minutes for the index changes to be reflected
 * To learn more about how indices work check out the [Index Configuration](https://cloud.google.com/datastore/docs/tools/indexconfig) documentation
+
+## Creating A Dev Environment
+* It's a good idea to create a dev environment to
+    1. test the code prior to running `gcloud app deploy`
+    2. Understand why your code is getting 500 errors in production
+* Run the following command to initialize a dev environment that listens on port 8080 by default:
+```bash
+gcloud beta code dev
+```
+* [This article](https://stackoverflow.com/questions/56598069/nodejs-google-vision-is-unable-to-detect-a-project-id-in-the-current-environment) might have useful info on an unable to detect project Id error
