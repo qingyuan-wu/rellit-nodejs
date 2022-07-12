@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!--Sign in with Google-->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    
+    <link rel="stylesheet" href="static/css/styles.css" />
+    <script src="location.js"></script>
+    <script src="signin.js"></script>
+    <script src="jwt-decode.js"></script>
+    <script src="script.js"></script>
+    <meta name="google-signin-client_id" content="859550291312-jmcarebfcc8hrqkq4c1p7t5qt5cj7l5f.apps.googleusercontent.com">
+    <title>rellit</title>
+
+
+</head>
+<body>
+    <h1>Welcome to Rellit!</h1>
+    <div id="custom-greeting"></div>
+    <div>
+        <a href="https://github.com/qingyuan-wu/rellit" target="_blank">Link</a> To our project's GitHub repository
+    </div>
+    <br>
+    <div id="top-bar">
+        <span><a href="/questions">Questions</a></span>
+        <p id="google-auth">
+
+            <div id="g_id_onload"
+                data-client_id="859550291312-jmcarebfcc8hrqkq4c1p7t5qt5cj7l5f.apps.googleusercontent.com"
+                data-context="signin"
+                data-ux_mode="popup"
+                data-callback="handleCredentialResponse">
+            </div>
+
+            <div class="g_id_signin"
+                data-type="standard"
+                data-shape="pill"
+                data-theme="outline"
+                data-text="signin"
+                data-size="large"
+                data-logo_alignment="left">
+            </div>
+        </p>
+    </div>
+
+    <p id="location">
+        <button onclick="getCoordinates()">Click to get coordinates</button>
+        <p id="location-container"></p>
+    </p>
+
+    <!--Questions-->
+    <br>
+    <form method="POST" action="/new-question">
+        <label>What are you curious about?</label>
+        <input type="text" name="question" />
+        <br/>
+        <button>Submit</button>
+    </form>
+    
+    <!--MeetUp-->
+    <br>
+    <form method="POST" action="/new-meetup">
+        <label>What would you like to do?</label>
+        <input type="text" name="meetup" />
+        <br/>
+        <button>Submit</button>
+    </form>
+
+    <!--Chat-->
+    <br>
+    <form method="POST" action="/new-reply">
+        <label>(using this to test the responses in the chat):</label>
+        <input type="text" name="reply" />
+        <br/>
+        <button>Submit</button>
+    </form>
+
+    <ul id="response-list"></ul>
+    
+</body>
+</html>

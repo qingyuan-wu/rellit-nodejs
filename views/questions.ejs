@@ -1,0 +1,16 @@
+<head>
+    <title>Questiosn</title>
+</head>
+<body>
+    <h1>Questions</h1>
+    <% for (var i=0; i < data.length ; i++) { %>        
+        <h3><%- data[i].text -%></h3>
+        <small><%- data[i].time -%></small>
+        <form action="/reply" method="POST">
+            <input type="text" name="<%=data[i].time %>">
+            <input type="text" name="anotherRow">
+            <input type="submit" value="Reply">
+        </form>
+    <% } %>
+        
+</body>
