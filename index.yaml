@@ -1,0 +1,7 @@
+indexes:
+
+- kind: Reply
+  properties:
+    - name: questionId
+    - name: time
+      direction: desc

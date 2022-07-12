@@ -32,14 +32,14 @@ app.get('/questions', async (req, res) => {
     const [out] = await datastore.runQuery(queryGetQuestions);
     const questions = await Promise.all(out.map(async q => { 
         const questionId = q[datastore.KEY].id;
-
         const queryGetReplies = datastore.createQuery("Reply")
-                        .filter("questionId", "=", questionId)
-                        .order("time", {
-                            descending: true
-                        });
+        .filter("questionId", "=", questionId)
+        .order("time", {
+            descending: true
+        });
+
         const [replies] = await datastore.runQuery(queryGetReplies);
-        
+            
         return {
             "questionId": questionId,
             "text": q.text,
