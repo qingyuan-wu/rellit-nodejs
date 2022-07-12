@@ -39,6 +39,7 @@ app.get('/questions', async (req, res) => {
         });
 
         const [replies] = await datastore.runQuery(queryGetReplies);
+        console.log(replies);
             
         return {
             "questionId": questionId,
@@ -48,6 +49,7 @@ app.get('/questions', async (req, res) => {
         };   
     }));
     // console.log(questions);
+
     res.render('questions', { data: questions });
 });
 
@@ -80,8 +82,12 @@ app.post('/new-meetup', async (req, res) => {
         res.status(500).json({ message: "internal server error 500" });
     }
 });
-app.post('/reply', (req, res) => {    
-    return res.json(req.body);
+app.post('/reply', async (req, res) => {
+    let body = req.body;
+    body["time"] = new Date();
+    await insertRow.insert("Reply", body);
+    console.log(body);
+    return res.status(300).redirect("/questions");
 })
 
 app.post('/login', async (req, res) => {
