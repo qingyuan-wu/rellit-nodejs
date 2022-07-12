@@ -24,13 +24,30 @@ app.get('/', (req, res) => {
 });
 
 app.get('/questions', async (req, res) => {
-    const query = datastore
+    const queryGetQuestions = datastore
     .createQuery("Question")
     .order("time", {
         descending: true
     });
-    const [questions] = await datastore.runQuery(query);
-    questions.forEach(q => console.log(q));
+    const [out] = await datastore.runQuery(queryGetQuestions);
+    const questions = await Promise.all(out.map(async q => { 
+        const questionId = q[datastore.KEY].id;
+
+        const queryGetReplies = datastore.createQuery("Reply")
+                        .filter("questionId", "=", questionId)
+                        .order("time", {
+                            descending: true
+                        });
+        const [replies] = await datastore.runQuery(queryGetReplies);
+        
+        return {
+            "questionId": questionId,
+            "text": q.text,
+            "time": q.time,
+            "replies": replies,
+        };   
+    }));
+    // console.log(questions);
     res.render('questions', { data: questions });
 });
 

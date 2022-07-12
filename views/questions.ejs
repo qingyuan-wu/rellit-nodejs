@@ -3,11 +3,15 @@
 </head>
 <body>
     <h1>Questions</h1>
-    <% for (var i=0; i < data.length ; i++) { %>        
-        <h3><%- data[i].text -%></h3>
-        <small><%- data[i].time -%></small>
+    <% for (var i=0; i < data.length ; i++) { %>     
+        <h3><%- data[i].text %></h3>
+        <small><%- data[i].time %></small>
+        <h4>Replies</h4>
+        <% for (const reply in data[i].replies) { %>
+            <div><%- reply.text %></div>
+        <% } %>  
         <form action="/reply" method="POST">
-            <input type="text" name="<%=data[i].time %>">
+            <input type="text" name="<%= data[i].questionId %>">
             <input type="text" name="anotherRow">
             <input type="submit" value="Reply">
         </form>
