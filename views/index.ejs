@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="static/css/styles.css" />
     <script src="location.js"></script>
     <script src="signin.js"></script>
+    <script src="saveLocation.js"></script>
     <script src="jwt-decode.js"></script>
     <script src="script.js"></script>
     <meta name="google-signin-client_id" content="859550291312-jmcarebfcc8hrqkq4c1p7t5qt5cj7l5f.apps.googleusercontent.com">
@@ -44,7 +45,7 @@
     </div>
 
     <p id="location">
-        <button onclick="getCoordinates()">Click to get coordinates</button>
+        <button onclick="displayCoordinates()">Click to get coordinates</button>
         <p id="location-container"></p>
     </p>
 
@@ -52,7 +53,7 @@
     <br>
     <form method="POST" action="/new-question">
         <label>What are you curious about?</label>
-        <input type="text" name="question" />
+        <input type="text" name="question">
         <br/>
         <button>Submit</button>
     </form>
@@ -61,7 +62,7 @@
     <br>
     <form method="POST" action="/new-meetup">
         <label>What would you like to do?</label>
-        <input type="text" name="meetup" />
+        <input type="text" name="meetup">
         <br/>
         <button>Submit</button>
     </form>

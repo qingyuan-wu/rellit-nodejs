@@ -12,6 +12,7 @@ const {Datastore} = require('@google-cloud/datastore');
 const datastore = new Datastore();
 
 const insertRow = require('./lib/insertRow');
+const getCoordinates = require('./lib/getCoordinates');
 
 // Allow express to read the POST request body
 app.use(express.urlencoded({
@@ -55,11 +56,13 @@ app.get('/questions', async (req, res) => {
 
 app.post('/new-question', async (req, res) => {
     const question = req.body.question;
+    //const out = getCoordinates.c();
 
     const body = {
         text: question,
         time: new Date(),
     };
+    console.log(body);
     await insertRow.insert("Question", body);
     res.status(200).render("index");
 });
@@ -91,17 +94,24 @@ app.post('/reply', async (req, res) => {
 })
 
 app.post('/login', async (req, res) => {
+    
     const body = {
         email: req.body.email,
         firstname: req.body.given_name,
         lastname: req.body.family_name,
         profilePicture: req.body.picture,
+        long: req.body.long,
+        lat: req.body.lat,
         online: true
     };
-    
+    console.log(body);
     await insertRow.insert("Users", body);
     return res.render("index");
 });
+
+app.get("/chat", (req, res) => {
+    res.render("chat");
+})
 
 app.listen(port, () => {
   console.log(`Server listening on port ${port}`);
