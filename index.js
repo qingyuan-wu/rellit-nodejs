@@ -40,7 +40,7 @@ app.get('/questions', async (req, res) => {
         });
 
         const [replies] = await datastore.runQuery(queryGetReplies);
-        console.log(replies);
+        // console.log(replies);
             
         return {
             "questionId": questionId,
