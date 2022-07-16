@@ -16,6 +16,13 @@
 
 </head>
 <body>
+    <script>
+        if ("geolocation" in navigator) {
+            navigator.geolocation.getCurrentPosition(position => {
+                console.log(position.coords.latitude)
+            })
+        }
+    </script>
     <h1>Welcome to Rellit!</h1>
     <div id="custom-greeting"></div>
     <div>
