@@ -15,6 +15,14 @@
     <title>Rellit</title>
 </head>
 <body>
+    <script>
+        function test() {
+            const chat = document.getElementById('chat-title');
+            chat.insertAdjacentHTML("afterend",
+                "<h3>This is the text which has been inserted by JS</h3>")
+            console.log("test");
+        }
+    </script>
     <div class="container mt-5">
         <div class="row">
           <div class="col">
@@ -74,9 +82,15 @@
                       <button type="submit" class="btn btn-primary">Submit</button>
                   </div>
               </form>
+              <% for (let i=0; i < data.length; i++) { %>
+                <div style="cursor: pointer;" onclick="test()">
+                    <h3><%= data[i].text %></h3>
+                    <small><%= data[i].time %></small>
+                </div>     
+            <% } %>
             </div>
-            <div class="col-sm p-3 mb-2 bg-secondary text-white">
-              CHAT
+            <div id="chat-column" class="col-sm p-3 mb-2 bg-secondary text-white">
+              <div id="chat-title">CHAT</div>
             </div>
           </div>
         </div>
