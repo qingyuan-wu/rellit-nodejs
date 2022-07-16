@@ -8,6 +8,7 @@
     <script src="https://accounts.google.com/gsi/client" async defer></script>
     <script src="location.js"></script>
     <script src="signin.js"></script>
+    <script src="saveLocation.js"></script>
     <script src="jwt-decode.js"></script>
     <script src="script.js"></script>
     <meta name="google-signin-client_id" content="859550291312-jmcarebfcc8hrqkq4c1p7t5qt5cj7l5f.apps.googleusercontent.com">
@@ -80,21 +81,21 @@
           </div>
         </div>
     </div>
-        
-    
-    <!--
-    <div id="custom-greeting"></div>
-    <div>
-        <a href="https://github.com/qingyuan-wu/rellit" target="_blank">Link</a> To our project's GitHub repository
-    </div>
+
+    <!--Questions-->
     <br>
-    <div id="top-bar">
-        <span><a href="/questions">Questions</a></span>
-    </div>
+    <form method="POST" action="/new-question">
+        <label>What are you curious about?</label>
+        <input type="text" name="question">
+        <br/>
+        <button>Submit</button>
+    </form>
+    
+    <!--MeetUp-->
     <br>
     <form method="POST" action="/new-meetup">
         <label>What would you like to do?</label>
-        <input type="text" name="meetup" />
+        <input type="text" name="meetup">
         <br/>
         <button>Submit</button>
     </form>
@@ -105,7 +106,10 @@
         <br/>
         <button>Submit</button>
     </form>
-    -->
+
+    <div>
+        <a href="https://github.com/qingyuan-wu/rellit" target="_blank">Link</a> To our project's GitHub repository
+    </div>
     
 </body>
 </html>
