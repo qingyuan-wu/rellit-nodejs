@@ -43,6 +43,9 @@
         .reply-time-span {
             float:right;
         }
+        .number-of-replies {
+            float:right;
+        }
     </style>
 </head>
 <body>
@@ -71,7 +74,6 @@
               
             <div class="col-sm p-3 mb-2 bg-secondary text-white">
               MAP
-              <a href="https://www.godaddy.com/">Go meet</a>
             </div>
             <div class="col-sm p-3 mb-2 bg-info text-dark">
               <form method="POST" action="/new-question" class="form-group" id="ask-question">
@@ -82,6 +84,7 @@
               <% for (let i=0; i < data.length; i++) { %>
                 <div class="question-container" style="cursor: pointer;" onclick="displayResponses('<%= data[i].questionId %>')">
                     <h3><%= data[i].text %></h3>
+                    <span class="number-of-replies">Replies: <%= data[i]["replies"].length %></span>
                     <small><%= formatTime(data[i].time) %></small>
                 </div>     
             <% } %>
@@ -90,7 +93,9 @@
               <div id="replies-title">Replies</div>
               <% for (let i=0; i < data.length ; i++) { %>
                 <div class="hidden" id="<%= data[i].questionId %>">
-                    <h4><%= data[i].text %></h4>
+                    <div>
+                        <h4><%= data[i].text %></h4>
+                    </div>
                     <% for (let j=0; j < data[i]["replies"].length; j++) { %>
                         <div>
                             <span><%= data[i]["replies"][j].text %></span>
