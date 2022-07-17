@@ -13,14 +13,31 @@
     <script src="script.js"></script>
     <meta name="google-signin-client_id" content="859550291312-jmcarebfcc8hrqkq4c1p7t5qt5cj7l5f.apps.googleusercontent.com">
     <title>Rellit</title>
+    <style>
+        .hidden {
+            display:none;
+            position: sticky;
+            top: 30px;
+        }
+        #chat-title {
+            position: sticky;
+            top: 0;
+        }
+        #ask-question {
+            position: sticky;
+            top: 0;
+        }
+    </style>
 </head>
 <body>
     <script>
-        function test() {
-            const chat = document.getElementById('chat-title');
-            chat.insertAdjacentHTML("afterend",
-                "<h3>This is the text which has been inserted by JS</h3>")
-            console.log("test");
+        function displayResponses(questionId) {
+            const replyContainers = document.getElementsByClassName("hidden");
+            for (const container of replyContainers) {
+                container.style.display = "none";    
+            }
+            const elementToShow = document.getElementById(questionId);
+            elementToShow.style.display = "block";
         }
     </script>
     <div class="container mt-5">
@@ -76,14 +93,14 @@
             </div>
             <div class="col-sm p-3 mb-2 bg-info text-dark">
               <form>
-                  <div class="form-group" method="POST" action="/new-question">
+                  <div class="form-group" id="ask-question" method="POST" action="/new-question">
                       <label for="formGroupExampleInput">What are you curious about?</label>
                       <input type="text" class="form-control" id="formGroupExampleInput">
                       <button type="submit" class="btn btn-primary">Submit</button>
                   </div>
               </form>
               <% for (let i=0; i < data.length; i++) { %>
-                <div style="cursor: pointer;" onclick="test()">
+                <div style="cursor: pointer;" onclick="displayResponses('<%= data[i].questionId %>')">
                     <h3><%= data[i].text %></h3>
                     <small><%= data[i].time %></small>
                 </div>     
@@ -91,6 +108,19 @@
             </div>
             <div id="chat-column" class="col-sm p-3 mb-2 bg-secondary text-white">
               <div id="chat-title">CHAT</div>
+              <% for (let i=0; i < data.length ; i++) { %>
+                <div class="hidden" id="<%= data[i].questionId %>">
+                    <h4><%= data[i].text %></h4>
+                    <% for (let j=0; j < data[i]["replies"].length; j++) { %>
+                        <div><%= data[i]["replies"][j].text %></div>
+                    <% } %>  
+                    <form action="/reply" method="POST">
+                        <input type="text" name="text">
+                        <input type="hidden" name="questionId" value="<%= data[i].questionId %>">
+                        <input type="submit" value="Reply">
+                    </form>
+                </div>     
+            <% } %>
             </div>
           </div>
         </div>
