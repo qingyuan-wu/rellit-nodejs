@@ -130,8 +130,8 @@ app.post('/login', async (req, res) => {
     return res.render("index");
 });
 
-app.get("/chat", (req, res) => {
-    res.render("chat");
+app.get("/meet", (req, res) => {
+    return res.render("meet");
 });
 
 app.listen(port, () => {
