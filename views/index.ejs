@@ -20,6 +20,11 @@
             position: sticky;
             top: 30px;
         }
+        .replies-container {
+            background-color:rgb(127, 210, 238); 
+            border-radius: 5px;
+            padding: 10px;
+        }
         .question-container {
             margin-top: 20px;
             border: 3px solid black;
@@ -46,17 +51,26 @@
         .number-of-replies {
             float:right;
         }
+        .column-2 {
+            background-color: #5bc0de;
+        }
     </style>
 </head>
 <body>
     <script>
+        let previousQuestionContainer;
+        let previouReplyContainer;
         function displayResponses(questionId) {
-            const replyContainers = document.getElementsByClassName("hidden");
-            for (const container of replyContainers) {
-                container.style.display = "none";    
-            }
-            const elementToShow = document.getElementById(questionId);
-            elementToShow.style.display = "block";
+            const questionContainer = document.getElementById(`question-container-${questionId}`);
+            questionContainer.style["background-color"] = "lightblue";
+            if (previousQuestionContainer)
+                previousQuestionContainer.style["background-color"] = "#5bc0de";
+            if (previouReplyContainer)
+                previouReplyContainer.style.display = "none";
+            const replyContainer = document.getElementById(`replies-for-${questionId}`);
+            replyContainer.style.display = "block";
+            previousQuestionContainer = questionContainer;
+            previouReplyContainer = replyContainer;
         }
 
         document.addEventListener("DOMContentLoaded", function () {
@@ -75,14 +89,14 @@
             <div class="col-sm p-3 mb-2 bg-secondary text-white">
               MAP
             </div>
-            <div class="col-sm p-3 mb-2 bg-info text-dark">
+            <div class="column-2 col-sm p-3 mb-2 text-dark">
               <form method="POST" action="/new-question" class="form-group" id="ask-question">
                     <label for="formGroupExampleInput">What are you curious about?</label>
                     <input type="text" name="question" class="form-control" id="formGroupExampleInput">
                     <input type="submit" class="btn btn-primary" value="Submit">
               </form>
               <% for (let i=0; i < data.length; i++) { %>
-                <div class="question-container" style="cursor: pointer;" onclick="displayResponses('<%= data[i].questionId %>')">
+                <div class="question-container" id="question-container-<%= data[i].questionId %>" style="cursor: pointer;" onclick="displayResponses('<%= data[i].questionId %>')">
                     <h3><%= data[i].text %></h3>
                     <span class="number-of-replies">Replies: <%= data[i]["replies"].length %></span>
                     <small><%= formatTime(data[i].time) %></small>
@@ -92,7 +106,7 @@
             <div id="replies-column" class="col-sm p-3 mb-2 bg-secondary text-white">
               <div id="replies-title">Replies</div>
               <% for (let i=0; i < data.length ; i++) { %>
-                <div class="hidden" id="<%= data[i].questionId %>">
+                <div class="hidden replies-container" id="replies-for-<%= data[i].questionId %>">
                     <div>
                         <h4><%= data[i].text %></h4>
                     </div>
