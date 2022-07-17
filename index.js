@@ -7,6 +7,10 @@ app.set('views', __dirname + '/views');
 app.use(express.static(__dirname + '/views/scripts'));
 const bodyParser = require('body-parser');
 
+// Rellit favicon
+const favicon = require('serve-favicon');
+app.use(favicon(__dirname + '/public/images/favicon.ico'));
+
 // Imports the Google Cloud client library
 const {Datastore} = require('@google-cloud/datastore');
 const datastore = new Datastore();
