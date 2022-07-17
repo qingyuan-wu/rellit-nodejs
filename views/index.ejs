@@ -125,53 +125,9 @@
             }
         });      
     </script>
+
+    <%- include('partials/header.ejs') %>
     <div class="container mt-5">
-        <div class="row">
-          <div class="col">
-            <div class="dropdown show">
-                <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                  Menu
-                </a>
-                <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                  <a class="dropdown-item" href="#">About / FAQ's</a>
-                  <a class="dropdown-item" href="#">Account Settings</a>
-                  <a class="dropdown-item" href="#">Friends</a>
-                </div>
-            </div>
-          </div>
-          <div class="col-6">
-            <h1 class="text-center">Welcome to Rellit!</h1>
-            <div class="text-center mt-5" data-toggle="buttons">
-                <label class="btn btn-secondary active">
-                    <input type="radio" name="options" id="option1" autocomplete="off" checked> Ask a Question
-                </label>
-                <label class="btn btn-secondary">
-                    <input type="radio" name="options" id="option2" autocomplete="off"> Meet People
-                </label>
-            </div>
-          </div>
-          <div class="col">
-            <div class="google-auth">
-                <div id="g_id_onload"
-                    data-client_id="859550291312-jmcarebfcc8hrqkq4c1p7t5qt5cj7l5f.apps.googleusercontent.com"
-                    data-context="signin"
-                    data-ux_mode="popup"
-                    data-callback="handleCredentialResponse"
-                    style="position: absolute; top: 100px; right: 30px;
-                    width: 0; height: 0; z-index: 1001;">
-                </div>
-                <div class="g_id_signin"
-                    data-type="standard"
-                    data-shape="rectangular"
-                    data-theme="outline"
-                    data-text="sign_in_with"
-                    data-size="large"
-                    data-logo_alignment="left"
-                    data-width=200>
-                </div>
-            </div>
-          </div>
-          </div>
           <div class="row">
             <div class="col-sm p-3 mb-2 bg-secondary text-white">
               MAP
