@@ -128,9 +128,9 @@
                         <div><%= data[i]["replies"][j].text %></div>
                     <% } %>  
                     <form action="/reply" method="POST">
-                        <input type="text" name="text">
+                        <textarea rows="3" name="text" class="form-control" placeholder="Your Thoughts..."></textarea>
                         <input type="hidden" name="questionId" value="<%= data[i].questionId %>">
-                        <input type="submit" value="Reply">
+                        <input type="submit" value="Post" class="btn btn-primary">
                     </form>
                 </div>
             <% } %>
