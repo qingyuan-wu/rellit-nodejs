@@ -107,7 +107,6 @@ app.post('/new-meetup', async (req, res) => {
 
 app.post('/reply', async (req, res) => {
     let body = req.body;
-    console.log(body);
     body["time"] = new Date();
     await insertRow.insert("Reply", body);
 
