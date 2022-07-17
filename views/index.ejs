@@ -11,6 +11,7 @@
     <script src="saveLocation.js"></script>
     <script src="jwt-decode.js"></script>
     <script src="script.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <meta name="google-signin-client_id" content="859550291312-jmcarebfcc8hrqkq4c1p7t5qt5cj7l5f.apps.googleusercontent.com">
     <title>Rellit</title>
     <style>
@@ -27,13 +28,20 @@
         .reply {
             margin-top:15px;
         }
-        #chat-title {
+        #replies-title {
             position: sticky;
             top: 0;
         }
         #ask-question {
             position: sticky;
             top: 0;
+        }
+        .reply-time {
+            font-size:70%;
+            font-weight:300;
+        }
+        .reply-time-span {
+            float:right;
         }
     </style>
 </head>
@@ -47,14 +55,14 @@
             const elementToShow = document.getElementById(questionId);
             elementToShow.style.display = "block";
         }
+
         document.addEventListener("DOMContentLoaded", function () {
             const urlParams = new URLSearchParams(window.location.search);
             const displayQuestion = urlParams.get('question');
             if (displayQuestion !== null) {
                 displayResponses(displayQuestion);
             }
-        });
-            
+        });      
     </script>
 
     <%- include('partials/header.ejs') %>
@@ -74,20 +82,23 @@
               <% for (let i=0; i < data.length; i++) { %>
                 <div class="question-container" style="cursor: pointer;" onclick="displayResponses('<%= data[i].questionId %>')">
                     <h3><%= data[i].text %></h3>
-                    <small><%= data[i].time.toString().slice(0, 24) %></small>
+                    <small><%= formatTime(data[i].time) %></small>
                 </div>     
             <% } %>
             </div>
-            <div id="chat-column" class="col-sm p-3 mb-2 bg-secondary text-white">
-              <div id="chat-title">CHAT</div>
+            <div id="replies-column" class="col-sm p-3 mb-2 bg-secondary text-white">
+              <div id="replies-title">Replies</div>
               <% for (let i=0; i < data.length ; i++) { %>
                 <div class="hidden" id="<%= data[i].questionId %>">
                     <h4><%= data[i].text %></h4>
                     <% for (let j=0; j < data[i]["replies"].length; j++) { %>
-                        <div><%= data[i]["replies"][j].text %></div>
+                        <div>
+                            <span><%= data[i]["replies"][j].text %></span>
+                            <span class="reply-time-span"><small class="reply-time"><%= formatTime(data[i]["replies"][j].time) %></small></span>
+                        </div>
                     <% } %>  
                     <form action="/reply" method="POST" class="reply">
-                        <textarea rows="3" name="text" class="form-control" placeholder="Your Thoughts..."></textarea>
+                        <textarea rows="3" name="text" class="form-control" placeholder="Your Thoughts..." id="reply-textarea"></textarea>
                         <input type="hidden" name="questionId" value="<%= data[i].questionId %>">
                         <input type="submit" value="Post" class="btn btn-primary">
                     </form>
@@ -97,6 +108,12 @@
           </div>
         </div>
     </div>
+    <%
+        function formatTime(time) {
+            return time.toString().slice(0, 21);
+        }
+    %>
+
     
 </body>
 </html>
