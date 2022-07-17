@@ -45,9 +45,9 @@ app.get('/', async (req, res) => {
             "replies": replies,
         };   
     }));
-    // console.log(questions);
+    
 
-  res.render('index', { data: questions });
+  res.render('index', { data: questions, default: req.query.question });
 });
 
 app.get('/questions', async (req, res) => {
@@ -77,7 +77,7 @@ app.get('/questions', async (req, res) => {
     }));
     // console.log(questions);
 
-    res.render('questions', { data: questions });
+    res.render('index', { data: questions });
 });
 
 app.post('/new-question', async (req, res) => {
@@ -115,8 +115,8 @@ app.post('/reply', async (req, res) => {
     let body = req.body;
     body["time"] = new Date();
     await insertRow.insert("Reply", body);
-    console.log(body);
-    return res.status(300).redirect("/questions");
+    //fix thisssss
+    return res.redirect(`/?question=${body.questionId}`);
 })
 
 app.post('/login', async (req, res) => {
