@@ -83,9 +83,9 @@ app.post('/new-question', async (req, res) => {
         text: question,
         time: new Date(),
     };
-    console.log(body);
     await insertRow.insert("Question", body);
-    res.status(200).render("index");
+    
+    res.status(200).redirect("/");
 });
 
 app.post('/new-meetup', async (req, res) => {
@@ -104,6 +104,7 @@ app.post('/new-meetup', async (req, res) => {
         res.status(500).json({ message: "internal server error 500" });
     }
 });
+
 app.post('/reply', async (req, res) => {
     let body = req.body;
     console.log(body);
@@ -111,7 +112,7 @@ app.post('/reply', async (req, res) => {
     await insertRow.insert("Reply", body);
 
     return res.redirect(`/?question=${body.questionId}`);
-})
+});
 
 app.post('/login', async (req, res) => {
     
@@ -131,7 +132,7 @@ app.post('/login', async (req, res) => {
 
 app.get("/chat", (req, res) => {
     res.render("chat");
-})
+});
 
 app.listen(port, () => {
   console.log(`Server listening on port ${port}`);

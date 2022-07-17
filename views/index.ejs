@@ -24,6 +24,9 @@
             border: 3px solid black;
             padding:0;
         }
+        .reply {
+            margin-top:15px;
+        }
         #chat-title {
             position: sticky;
             top: 0;
@@ -105,12 +108,10 @@
               MAP
             </div>
             <div class="col-sm p-3 mb-2 bg-info text-dark">
-              <form>
-                  <div class="form-group" id="ask-question" method="POST" action="/new-question">
-                      <label for="formGroupExampleInput">What are you curious about?</label>
-                      <input type="text" class="form-control" id="formGroupExampleInput">
-                      <button type="submit" class="btn btn-primary">Submit</button>
-                  </div>
+              <form method="POST" action="/new-question" class="form-group" id="ask-question">
+                    <label for="formGroupExampleInput">What are you curious about?</label>
+                    <input type="text" name="question" class="form-control" id="formGroupExampleInput">
+                    <input type="submit" class="btn btn-primary" value="Submit">
               </form>
               <% for (let i=0; i < data.length; i++) { %>
                 <div class="question-container" style="cursor: pointer;" onclick="displayResponses('<%= data[i].questionId %>')">
@@ -127,7 +128,7 @@
                     <% for (let j=0; j < data[i]["replies"].length; j++) { %>
                         <div><%= data[i]["replies"][j].text %></div>
                     <% } %>  
-                    <form action="/reply" method="POST">
+                    <form action="/reply" method="POST" class="reply">
                         <textarea rows="3" name="text" class="form-control" placeholder="Your Thoughts..."></textarea>
                         <input type="hidden" name="questionId" value="<%= data[i].questionId %>">
                         <input type="submit" value="Post" class="btn btn-primary">
