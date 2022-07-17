@@ -1,6 +1,4 @@
 function handleCredentialResponse(res) {
-    
-    // resJson["coords"] = coords;
     navigator.geolocation.getCurrentPosition(position => {
         let resJson = jwt_decode(res.credential);
         const latitude  = position.coords.latitude;
@@ -9,8 +7,6 @@ function handleCredentialResponse(res) {
         console.log("hellooooo");
         resJson.long = longitude;
         resJson.lat = latitude;
-        resJson.test = "hello";
-        console.log(resJson);
 
         document.getElementById("custom-greeting").innerHTML = `Hello ${resJson.given_name}!`;
 
