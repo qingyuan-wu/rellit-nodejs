@@ -43,16 +43,17 @@
             position: sticky;
             top: 0;
         }
-
+        .replies-text {
+            font-size:90%;
+            font-weight:700;
+        }
         .reply-time {
-            font-size:70%;
+            font-size:80%;
             font-weight:300;
         }
         .reply-time-span {
+            clear:both;
             float:right;
-        }
-        .reply-text-span {
-            float: left;
         }
         .number-of-replies {
             float:right;
@@ -198,8 +199,10 @@
                     </div>
                     <% for (let j=0; j < data[i]["replies"].length; j++) { %>
                         <div>
-                            <span><%= data[i]["replies"][j].text %></span>
-                            <span class="reply-time-span"><small class="reply-time"><%= formatTime(data[i]["replies"][j].time) %></small></span>
+                            <div class="replies-text"><%= data[i]["replies"][j].text %></div>
+                            <div>
+                                <span class="reply-time"><small class="reply-time"><%= formatTime(data[i]["replies"][j].time) %></small></span>
+                            </div> 
                         </div>
                     <% } %>  
                     <form action="/reply" method="POST" class="reply">
