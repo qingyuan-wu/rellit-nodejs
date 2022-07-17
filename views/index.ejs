@@ -1,62 +1,132 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <!--Sign in with Google-->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
     <script src="https://accounts.google.com/gsi/client" async defer></script>
-    
-    <link rel="stylesheet" href="static/css/styles.css" />
     <script src="location.js"></script>
     <script src="signin.js"></script>
     <script src="saveLocation.js"></script>
     <script src="jwt-decode.js"></script>
     <script src="script.js"></script>
     <meta name="google-signin-client_id" content="859550291312-jmcarebfcc8hrqkq4c1p7t5qt5cj7l5f.apps.googleusercontent.com">
-    <title>rellit</title>
-
-
+    <title>Rellit</title>
+    <style>
+        .hidden {
+            display:none;
+            position: sticky;
+            top: 30px;
+        }
+        #chat-title {
+            position: sticky;
+            top: 0;
+        }
+        #ask-question {
+            position: sticky;
+            top: 0;
+        }
+    </style>
 </head>
 <body>
     <script>
-        if ("geolocation" in navigator) {
-            navigator.geolocation.getCurrentPosition(position => {
-                console.log(position.coords.latitude)
-            })
+        function displayResponses(questionId) {
+            const replyContainers = document.getElementsByClassName("hidden");
+            for (const container of replyContainers) {
+                container.style.display = "none";    
+            }
+            const elementToShow = document.getElementById(questionId);
+            elementToShow.style.display = "block";
         }
     </script>
-    <h1>Welcome to Rellit!</h1>
-    <div id="custom-greeting"></div>
-    <div>
-        <a href="https://github.com/qingyuan-wu/rellit" target="_blank">Link</a> To our project's GitHub repository
-    </div>
-    <br>
-    <div id="top-bar">
-        <span><a href="/questions">Questions</a></span>
-        <p id="google-auth">
-
-            <div id="g_id_onload"
-                data-client_id="859550291312-jmcarebfcc8hrqkq4c1p7t5qt5cj7l5f.apps.googleusercontent.com"
-                data-context="signin"
-                data-ux_mode="popup"
-                data-callback="handleCredentialResponse">
+    <div class="container mt-5">
+        <div class="row">
+          <div class="col">
+            <div class="dropdown show">
+                <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  Menu
+                </a>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                  <a class="dropdown-item" href="#">About / FAQ's</a>
+                  <a class="dropdown-item" href="#">Account Settings</a>
+                  <a class="dropdown-item" href="#">Friends</a>
+                </div>
             </div>
-
-            <div class="g_id_signin"
-                data-type="standard"
-                data-shape="pill"
-                data-theme="outline"
-                data-text="signin"
-                data-size="large"
-                data-logo_alignment="left">
+          </div>
+          <div class="col-6">
+            <h1 class="text-center">Welcome to Rellit!</h1>
+            <div class="text-center mt-5" data-toggle="buttons">
+                <label class="btn btn-secondary active">
+                    <input type="radio" name="options" id="option1" autocomplete="off" checked> Ask a Question
+                </label>
+                <label class="btn btn-secondary">
+                    <input type="radio" name="options" id="option2" autocomplete="off"> Meet People
+                </label>
             </div>
-        </p>
+          </div>
+          <div class="col">
+            <div class="google-auth">
+                <div id="g_id_onload"
+                    data-client_id="859550291312-jmcarebfcc8hrqkq4c1p7t5qt5cj7l5f.apps.googleusercontent.com"
+                    data-context="signin"
+                    data-ux_mode="popup"
+                    data-callback="handleCredentialResponse"
+                    style="position: absolute; top: 100px; right: 30px;
+                    width: 0; height: 0; z-index: 1001;">
+                </div>
+                <div class="g_id_signin"
+                    data-type="standard"
+                    data-shape="rectangular"
+                    data-theme="outline"
+                    data-text="sign_in_with"
+                    data-size="large"
+                    data-logo_alignment="left"
+                    data-width=200>
+                </div>
+            </div>
+          </div>
+          </div>
+          <div class="row">
+            <div class="col-sm p-3 mb-2 bg-secondary text-white">
+              MAP
+            </div>
+            <div class="col-sm p-3 mb-2 bg-info text-dark">
+              <form>
+                  <div class="form-group" id="ask-question" method="POST" action="/new-question">
+                      <label for="formGroupExampleInput">What are you curious about?</label>
+                      <input type="text" class="form-control" id="formGroupExampleInput">
+                      <button type="submit" class="btn btn-primary">Submit</button>
+                  </div>
+              </form>
+              <% for (let i=0; i < data.length; i++) { %>
+                <div style="cursor: pointer;" onclick="displayResponses('<%= data[i].questionId %>')">
+                    <h3><%= data[i].text %></h3>
+                    <small><%= data[i].time %></small>
+                </div>     
+            <% } %>
+            </div>
+            <div id="chat-column" class="col-sm p-3 mb-2 bg-secondary text-white">
+              <div id="chat-title">CHAT</div>
+              <% for (let i=0; i < data.length ; i++) { %>
+                <div class="hidden" id="<%= data[i].questionId %>">
+                    <h4><%= data[i].text %></h4>
+                    <% for (let j=0; j < data[i]["replies"].length; j++) { %>
+                        <div><%= data[i]["replies"][j].text %></div>
+                    <% } %>  
+                    <form action="/reply" method="POST">
+                        <input type="text" name="text">
+                        <input type="hidden" name="questionId" value="<%= data[i].questionId %>">
+                        <input type="submit" value="Reply">
+                    </form>
+                </div>     
+            <% } %>
+            </div>
+          </div>
+        </div>
     </div>
 
-    <p id="location">
-        <button onclick="displayCoordinates()">Click to get coordinates</button>
-        <p id="location-container"></p>
-    </p>
-
-    <!--Questions-->
+    <!--
     <br>
     <form method="POST" action="/new-question">
         <label>What are you curious about?</label>
@@ -64,8 +134,6 @@
         <br/>
         <button>Submit</button>
     </form>
-    
-    <!--MeetUp-->
     <br>
     <form method="POST" action="/new-meetup">
         <label>What would you like to do?</label>
@@ -73,8 +141,6 @@
         <br/>
         <button>Submit</button>
     </form>
-
-    <!--Chat-->
     <br>
     <form method="POST" action="/new-reply">
         <label>(using this to test the responses in the chat):</label>
@@ -82,8 +148,10 @@
         <br/>
         <button>Submit</button>
     </form>
-
-    <ul id="response-list"></ul>
+    <footer>
+        <a href="https://github.com/qingyuan-wu/rellit" target="_blank">Link</a> To our project's GitHub repository
+    </footer>
+    -->
     
 </body>
 </html>

@@ -20,8 +20,34 @@ app.use(express.urlencoded({
 }));
 app.use(bodyParser.json());
 
-app.get('/', (req, res) => {
-  res.render('index');
+app.get('/', async (req, res) => {
+    const queryGetQuestions = datastore
+    .createQuery("Question")
+    .order("time", {
+        descending: true
+    });
+    const [out] = await datastore.runQuery(queryGetQuestions);
+    const questions = await Promise.all(out.map(async q => { 
+        const questionId = q[datastore.KEY].id;
+        const queryGetReplies = datastore.createQuery("Reply")
+        .filter("questionId", "=", questionId)
+        .order("time", {
+            descending: true
+        });
+
+        const [replies] = await datastore.runQuery(queryGetReplies);
+        // console.log(replies);
+            
+        return {
+            "questionId": questionId,
+            "text": q.text,
+            "time": q.time,
+            "replies": replies,
+        };   
+    }));
+    // console.log(questions);
+
+  res.render('index', { data: questions });
 });
 
 app.get('/questions', async (req, res) => {
