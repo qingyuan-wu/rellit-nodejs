@@ -12,7 +12,6 @@ const {Datastore} = require('@google-cloud/datastore');
 const datastore = new Datastore();
 
 const insertRow = require('./lib/insertRow');
-const getCoordinates = require('./lib/getCoordinates');
 
 // Allow express to read the POST request body
 app.use(express.urlencoded({
@@ -36,7 +35,6 @@ app.get('/', async (req, res) => {
         });
 
         const [replies] = await datastore.runQuery(queryGetReplies);
-        // console.log(replies);
             
         return {
             "questionId": questionId,
@@ -66,7 +64,6 @@ app.get('/questions', async (req, res) => {
         });
 
         const [replies] = await datastore.runQuery(queryGetReplies);
-        // console.log(replies);
             
         return {
             "questionId": questionId,
@@ -75,14 +72,12 @@ app.get('/questions', async (req, res) => {
             "replies": replies,
         };   
     }));
-    // console.log(questions);
 
     res.render('index', { data: questions });
 });
 
 app.post('/new-question', async (req, res) => {
     const question = req.body.question;
-    //const out = getCoordinates.c();
 
     const body = {
         text: question,
@@ -101,10 +96,8 @@ app.post('/new-meetup', async (req, res) => {
             text: meetup,
             time: new Date(),
         };
-
         await insertRow.insert("MeetUp", body);
-        // giving an error
-        //res.status(200).redirect("/");
+
         res.status(200).render('index');
     }
     catch {
@@ -115,7 +108,7 @@ app.post('/reply', async (req, res) => {
     let body = req.body;
     body["time"] = new Date();
     await insertRow.insert("Reply", body);
-    //fix thisssss
+
     return res.redirect(`/?question=${body.questionId}`);
 })
 
@@ -130,8 +123,8 @@ app.post('/login', async (req, res) => {
         lat: req.body.lat,
         online: true
     };
-    console.log(body);
     await insertRow.insert("Users", body);
+
     return res.render("index");
 });
 
