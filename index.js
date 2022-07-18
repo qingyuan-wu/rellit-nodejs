@@ -1,4 +1,5 @@
 const express = require('express');
+const session = require('express-session');
 const app = express();
 const port = 8080;
 
@@ -6,6 +7,12 @@ app.set('view engine', 'ejs');
 app.set('views', __dirname + '/views');
 app.use(express.static(__dirname + '/views/scripts'));
 const bodyParser = require('body-parser');
+
+app.use(session({
+    secret: 'secret-key',
+    resave: false,
+    saveUninitialized: false,
+}));
 
 // Rellit favicon
 const favicon = require('serve-favicon');
@@ -23,7 +30,11 @@ app.use(express.urlencoded({
 }));
 app.use(bodyParser.json());
 
+let viewCount = 0; // TESTING
+
 app.get('/', async (req, res) => {
+    viewCount += 1; // TESTING
+    
     const queryGetQuestions = datastore
     .createQuery("Question")
     .order("time", {
@@ -49,7 +60,7 @@ app.get('/', async (req, res) => {
     }));
     
 
-  res.render('index', { data: questions, default: req.query.question });
+  res.render('index', { data: questions, default: req.query.question, viewCount: viewCount});
 });
 
 app.get('/questions', async (req, res) => {
