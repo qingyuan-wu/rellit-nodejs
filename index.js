@@ -8,12 +8,6 @@ app.set('views', __dirname + '/views');
 app.use(express.static(__dirname + '/views/scripts'));
 const bodyParser = require('body-parser');
 
-app.use(session({
-    secret: 'secret-key',
-    resave: false,
-    saveUninitialized: false,
-}));
-
 // Rellit favicon
 const favicon = require('serve-favicon');
 app.use(favicon(__dirname + '/public/images/favicon.ico'));
@@ -30,11 +24,14 @@ app.use(express.urlencoded({
 }));
 app.use(bodyParser.json());
 
-let viewCount = 0; // TESTING
+var sessionInfo;
 
 app.get('/', async (req, res) => {
-    viewCount += 1; // TESTING
-    
+    if (req.session) {
+        sessionInfo = "session active"
+    } else {
+        sessionInfo = "session not active";
+    }
     const queryGetQuestions = datastore
     .createQuery("Question")
     .order("time", {
@@ -60,10 +57,15 @@ app.get('/', async (req, res) => {
     }));
     
 
-  res.render('index', { data: questions, default: req.query.question, viewCount: viewCount});
+  res.render('index', { data: questions, default: req.query.question, sessionStuff: sessionInfo});
 });
 
 app.get('/questions', async (req, res) => {
+    if (req.session) {
+        sessionInfo = "session active"
+    } else {
+        sessionInfo = "session not active";
+    }
     const queryGetQuestions = datastore
     .createQuery("Question")
     .order("time", {
@@ -88,7 +90,7 @@ app.get('/questions', async (req, res) => {
         };   
     }));
 
-    res.render('index', { data: questions });
+    res.render('index', { data: questions, sessionStuff: sessionInfo });
 });
 
 app.post('/new-question', async (req, res) => {
@@ -129,7 +131,12 @@ app.post('/reply', async (req, res) => {
 });
 
 app.post('/login', async (req, res) => {
-    
+    // Starts a session when user logs in
+    app.use(session({
+        secret: 'secret-key',
+        resave: false,
+        saveUninitialized: false,
+    }));
     const body = {
         email: req.body.email,
         firstname: req.body.given_name,
