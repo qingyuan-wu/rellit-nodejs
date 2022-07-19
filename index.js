@@ -1,4 +1,5 @@
 const express = require('express');
+const haversine = require('haversine-distance');
 const app = express();
 const port = 8080;
 
@@ -24,12 +25,23 @@ app.use(express.urlencoded({
 app.use(bodyParser.json());
 
 app.get('/', async (req, res) => {
+    console.log(req.body.long);
+    console.log(req.body.lat);
     const queryGetQuestions = datastore
     .createQuery("Question")
     .order("time", {
         descending: true
     });
     const [out] = await datastore.runQuery(queryGetQuestions);
+    function compareFunction(a, b) {
+        const viewerCoords;
+        const aCoords = [a.lat, a.long];
+        const bCoords = [b.lat, b.long];
+        if (haversine(viewCoords, aCoords) < haversine(viewCoords, bCoords))
+            return -1;
+        return 1;
+    }
+
     const questions = await Promise.all(out.map(async q => { 
         const questionId = q[datastore.KEY].id;
         const queryGetReplies = datastore.createQuery("Reply")
@@ -38,8 +50,9 @@ app.get('/', async (req, res) => {
             descending: true
         });
 
+
         const [replies] = await datastore.runQuery(queryGetReplies);
-            
+        
         return {
             "questionId": questionId,
             "text": q.text,
@@ -48,8 +61,7 @@ app.get('/', async (req, res) => {
         };   
     }));
     
-
-  res.render('index', { data: questions, default: req.query.question });
+    res.render('index', { data: questions, default: req.query.question });
 });
 
 app.get('/questions', async (req, res) => {
@@ -81,14 +93,14 @@ app.get('/questions', async (req, res) => {
 });
 
 app.post('/new-question', async (req, res) => {
-    const question = req.body.question;
-
     const body = {
-        text: question,
+        text: req.body.question,
         time: new Date(),
+        long: req.body.long,
+        lat: req.body.lat,
     };
     await insertRow.insert("Question", body);
-    
+
     res.status(200).redirect("/");
 });
 
@@ -124,8 +136,8 @@ app.post('/login', async (req, res) => {
         firstname: req.body.given_name,
         lastname: req.body.family_name,
         profilePicture: req.body.picture,
-        long: req.body.long,
-        lat: req.body.lat,
+        long: req.body.long_question,
+        lat: req.body.lat_question,
         online: true
     };
     await insertRow.insert("Users", body);
@@ -138,5 +150,5 @@ app.get("/meet", (req, res) => {
 });
 
 app.listen(port, () => {
-  console.log(`Server listening on port ${port}`);
+    console.log(`Server listening on port ${port}`);
 });

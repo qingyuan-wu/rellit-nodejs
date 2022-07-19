@@ -4,11 +4,8 @@ function handleCredentialResponse(res) {
         const latitude  = position.coords.latitude;
         const longitude = position.coords.longitude;
         console.log(latitude);
-        console.log("hellooooo");
         resJson.long = longitude;
         resJson.lat = latitude;
-
-        document.getElementById("custom-greeting").innerHTML = `Hello ${resJson.given_name}!`;
 
         var xhr = new XMLHttpRequest();
         xhr.open("POST", "/login", true);
