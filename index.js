@@ -30,6 +30,8 @@ app.post('/start-session', async (req, res) => {
         secret: 'secret-key',
         resave: false,
         saveUninitialized: false,
+        long: req.body.long,
+        lat: req.body.lat,
     }));
 
     const queryGetQuestions = datastore
@@ -58,7 +60,7 @@ app.post('/start-session', async (req, res) => {
     
     var sessionStatus = "Session Started!";
 
-    res.render('index', { data: questions, default: req.query.question, sessionStuff: sessionStatus});
+    res.render('index', { data: questions, sessionStuff: sessionStatus});
 });
 
 app.get('/', async (req, res) => {
