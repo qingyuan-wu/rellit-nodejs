@@ -24,44 +24,24 @@ app.use(express.urlencoded({
     extended: true
 }));
 app.use(bodyParser.json());
+app.use(session({
+    secret: 'secret-key',
+    resave: false,
+    saveUninitialized: false,
+    cookie: { maxAge: 30*60*1000 }, // 30-minute sessions
+}));
 
 // Starts a session and directs the user to the questions page
 app.post('/start-session', async (req, res) => {
-    app.use(session({
-        secret: 'secret-key',
-        resave: false,
-        saveUninitialized: false,
-        long: req.body.long,
-        lat: req.body.lat,
-    }));
-
-    const queryGetQuestions = datastore
-    .createQuery("Question")
-    .order("time", {
-        descending: true
-    });
-    const [out] = await datastore.runQuery(queryGetQuestions);
-    const questions = await Promise.all(out.map(async q => { 
-        const questionId = q[datastore.KEY].id;
-        const queryGetReplies = datastore.createQuery("Reply")
-        .filter("questionId", "=", questionId)
-        .order("time", {
-            descending: true
-        });
-
-        const [replies] = await datastore.runQuery(queryGetReplies);
-            
-        return {
-            "questionId": questionId,
-            "text": q.text,
-            "time": q.time,
-            "replies": replies,
-        };   
-    }));
-    
-    var sessionStatus = "Session Started!";
-
-    res.render('index', { data: questions, sessionStuff: sessionStatus});
+    const sesh = req.session;
+    if (sesh) {
+        sesh.long = req.body.long;
+        sesh.lat = req.body.lat;
+    }
+    else {
+        console.log("session unavailable. Are you logged in?");
+    }
+    res.redirect('/');
 });
 
 app.get('/', async (req, res) => {
@@ -74,20 +54,29 @@ app.get('/', async (req, res) => {
     }
     const queryGetQuestions = datastore
     .createQuery("Question")
-    // .order("time", {
-    //     descending: true
-    // });
+    .order("time", {
+        descending: true
+    });
     const [questions] = await datastore.runQuery(queryGetQuestions);
-    const viewerCoords = [sesh.lat, sesh.long];
-    function getShorterDistance(a, b) {
-        const aCoords = [a.lat, a.long];
-        const bCoords = [b.lat, b.long];
-        if (haversine(viewerCoords, aCoords) < haversine(viewerCoords, bCoords))
-            return -1;
-        return 1;
+    if (sesh && sesh.lat && sesh.long) {
+        console.log("sorting by location");
+        console.log(sesh.lat, sesh.long);
+        const viewerCoords = [sesh.lat, sesh.long];
+        function getShorterDistance(a, b) {
+            if (a.lat && a.long && b.lat && b.long) {
+                const aCoords = [a.lat, a.long];
+                const bCoords = [b.lat, b.long];
+                if (haversine(viewerCoords, aCoords) < haversine(viewerCoords, bCoords))
+                    return -1;
+                return 1;
+            }
+            return 0;
+        }
+        questions.sort(getShorterDistance);
     }
-    questions.sort(getShorterDistance);
-
+    else {
+        console.log("Viewer location unavailable. Sorted by time");
+    }
     const questionsAndReplies = await Promise.all(questions.map(async q => { 
         const questionId = q[datastore.KEY].id;
         const queryGetReplies = datastore.createQuery("Reply")
@@ -106,7 +95,7 @@ app.get('/', async (req, res) => {
         };   
     }));
     
-    res.render('index', { data: questionsAndReplies, default: req.query.question, sessionStuff: sessionStatus});
+    res.render('index', { data: questionsAndReplies, sessionStuff: sessionStatus});
 });
 
 app.get('/questions', async (req, res) => {
