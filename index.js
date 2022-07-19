@@ -24,13 +24,26 @@ app.use(express.urlencoded({
 }));
 app.use(bodyParser.json());
 
-var sessionInfo;
+app.post('/start-session', async (req, res) => {
+    app.use(session({
+        secret: 'secret-key',
+        resave: false,
+        saveUninitialized: false,
+    }));
+});
+
+app.use(session({
+    secret: 'secret-key',
+    resave: false,
+    saveUninitialized: false,
+}));
 
 app.get('/', async (req, res) => {
+    var sessionStatus;
     if (req.session) {
-        sessionInfo = "session active"
+        sessionStatus = "Welcome!"
     } else {
-        sessionInfo = "session not active";
+        sessionStatus = "Sign in to leave a comment!";
     }
     const queryGetQuestions = datastore
     .createQuery("Question")
@@ -57,14 +70,15 @@ app.get('/', async (req, res) => {
     }));
     
 
-  res.render('index', { data: questions, default: req.query.question, sessionStuff: sessionInfo});
+  res.render('index', { data: questions, default: req.query.question, sessionStuff: sessionStatus});
 });
 
 app.get('/questions', async (req, res) => {
+    var sessionStatus;
     if (req.session) {
-        sessionInfo = "session active"
+        sessionStatus = "session active"
     } else {
-        sessionInfo = "session not active";
+        sessionStatus = "session not active";
     }
     const queryGetQuestions = datastore
     .createQuery("Question")
@@ -90,7 +104,7 @@ app.get('/questions', async (req, res) => {
         };   
     }));
 
-    res.render('index', { data: questions, sessionStuff: sessionInfo });
+    res.render('index', { data: questions, sessionStuff: sessionStatus });
 });
 
 app.post('/new-question', async (req, res) => {
@@ -131,12 +145,6 @@ app.post('/reply', async (req, res) => {
 });
 
 app.post('/login', async (req, res) => {
-    // Starts a session when user logs in
-    app.use(session({
-        secret: 'secret-key',
-        resave: false,
-        saveUninitialized: false,
-    }));
     const body = {
         email: req.body.email,
         firstname: req.body.given_name,
