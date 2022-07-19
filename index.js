@@ -1,5 +1,6 @@
 const express = require('express');
 const haversine = require('haversine-distance');
+const session = require('express-session');
 const app = express();
 const port = 8080;
 
@@ -24,24 +25,22 @@ app.use(express.urlencoded({
 }));
 app.use(bodyParser.json());
 
-app.get('/', async (req, res) => {
-    console.log(req.body.long);
-    console.log(req.body.lat);
+// Starts a session and directs the user to the questions page
+app.post('/start-session', async (req, res) => {
+    app.use(session({
+        secret: 'secret-key',
+        resave: false,
+        saveUninitialized: false,
+        long: req.body.long,
+        lat: req.body.lat,
+    }));
+
     const queryGetQuestions = datastore
     .createQuery("Question")
     .order("time", {
         descending: true
     });
     const [out] = await datastore.runQuery(queryGetQuestions);
-    function compareFunction(a, b) {
-        const viewerCoords;
-        const aCoords = [a.lat, a.long];
-        const bCoords = [b.lat, b.long];
-        if (haversine(viewCoords, aCoords) < haversine(viewCoords, bCoords))
-            return -1;
-        return 1;
-    }
-
     const questions = await Promise.all(out.map(async q => { 
         const questionId = q[datastore.KEY].id;
         const queryGetReplies = datastore.createQuery("Reply")
@@ -50,6 +49,52 @@ app.get('/', async (req, res) => {
             descending: true
         });
 
+        const [replies] = await datastore.runQuery(queryGetReplies);
+            
+        return {
+            "questionId": questionId,
+            "text": q.text,
+            "time": q.time,
+            "replies": replies,
+        };   
+    }));
+    
+    var sessionStatus = "Session Started!";
+
+    res.render('index', { data: questions, sessionStuff: sessionStatus});
+});
+
+app.get('/', async (req, res) => {
+    const sesh = req.session;
+    let sessionStatus;
+    if (sesh) {
+        sessionStatus = "Session Started!"
+    } else {
+        sessionStatus = "Session is not active";
+    }
+    const queryGetQuestions = datastore
+    .createQuery("Question")
+    // .order("time", {
+    //     descending: true
+    // });
+    const [questions] = await datastore.runQuery(queryGetQuestions);
+    const viewerCoords = [sesh.lat, sesh.long];
+    function getShorterDistance(a, b) {
+        const aCoords = [a.lat, a.long];
+        const bCoords = [b.lat, b.long];
+        if (haversine(viewerCoords, aCoords) < haversine(viewerCoords, bCoords))
+            return -1;
+        return 1;
+    }
+    questions.sort(getShorterDistance);
+
+    const questionsAndReplies = await Promise.all(questions.map(async q => { 
+        const questionId = q[datastore.KEY].id;
+        const queryGetReplies = datastore.createQuery("Reply")
+        .filter("questionId", "=", questionId)
+        .order("time", {
+            descending: true
+        });
 
         const [replies] = await datastore.runQuery(queryGetReplies);
         
@@ -61,10 +106,16 @@ app.get('/', async (req, res) => {
         };   
     }));
     
-    res.render('index', { data: questions, default: req.query.question });
+    res.render('index', { data: questionsAndReplies, default: req.query.question, sessionStuff: sessionStatus});
 });
 
 app.get('/questions', async (req, res) => {
+    var sessionStatus;
+    if (req.session) {
+        sessionStatus = "session active"
+    } else {
+        sessionStatus = "session not active";
+    }
     const queryGetQuestions = datastore
     .createQuery("Question")
     .order("time", {
@@ -89,7 +140,7 @@ app.get('/questions', async (req, res) => {
         };   
     }));
 
-    res.render('index', { data: questions });
+    res.render('index', { data: questions, sessionStuff: sessionStatus });
 });
 
 app.post('/new-question', async (req, res) => {
@@ -130,7 +181,6 @@ app.post('/reply', async (req, res) => {
 });
 
 app.post('/login', async (req, res) => {
-    
     const body = {
         email: req.body.email,
         firstname: req.body.given_name,
@@ -146,7 +196,13 @@ app.post('/login', async (req, res) => {
 });
 
 app.get("/meet", (req, res) => {
-    return res.render("meet");
+    var sessionStatus;
+    if (req.session) {
+        sessionStatus = "session active"
+    } else {
+        sessionStatus = "session not active";
+    }
+    return res.render("meet", {sessionStuff: sessionStatus });
 });
 
 app.listen(port, () => {

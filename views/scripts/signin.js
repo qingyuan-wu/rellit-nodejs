@@ -8,7 +8,7 @@ function handleCredentialResponse(res) {
         resJson.lat = latitude;
 
         var xhr = new XMLHttpRequest();
-        xhr.open("POST", "/login", true);
+        xhr.open("POST", "/start-session", true);
         xhr.setRequestHeader('Content-Type', 'application/json');
         xhr.send(JSON.stringify(resJson));
     })
