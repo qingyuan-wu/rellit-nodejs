@@ -98,40 +98,6 @@ app.get('/', async (req, res) => {
     res.render('index', { data: questionsAndReplies, sessionStuff: sessionStatus});
 });
 
-app.get('/questions', async (req, res) => {
-    var sessionStatus;
-    if (req.session) {
-        sessionStatus = "session active"
-    } else {
-        sessionStatus = "session not active";
-    }
-    const queryGetQuestions = datastore
-    .createQuery("Question")
-    .order("time", {
-        descending: true
-    });
-    const [out] = await datastore.runQuery(queryGetQuestions);
-    const questions = await Promise.all(out.map(async q => { 
-        const questionId = q[datastore.KEY].id;
-        const queryGetReplies = datastore.createQuery("Reply")
-        .filter("questionId", "=", questionId)
-        .order("time", {
-            descending: true
-        });
-
-        const [replies] = await datastore.runQuery(queryGetReplies);
-            
-        return {
-            "questionId": questionId,
-            "text": q.text,
-            "time": q.time,
-            "replies": replies,
-        };   
-    }));
-
-    res.render('index', { data: questions, sessionStuff: sessionStatus });
-});
-
 app.post('/new-question', async (req, res) => {
     const body = {
         text: req.body.question,
@@ -141,7 +107,7 @@ app.post('/new-question', async (req, res) => {
     };
     await insertRow.insert("Question", body);
 
-    res.status(200).redirect("/");
+    return res.status(200).redirect("/");
 });
 
 app.post('/new-meetup', async (req, res) => {

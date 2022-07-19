@@ -43,3 +43,7 @@ gcloud datastore indexes create index.yaml
 gcloud beta code dev
 ```
 * [This article](https://stackoverflow.com/questions/56598069/nodejs-google-vision-is-unable-to-detect-a-project-id-in-the-current-environment) might have useful info on an unable to detect project Id error
+
+## Known Issues
+* When in development, each time you refresh the server (including auto-refresh by nodemon), the session will terminate
+    * a new session must be started again by signing into Google
