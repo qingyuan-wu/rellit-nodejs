@@ -3,7 +3,6 @@ function handleCredentialResponse(res) {
         let resJson = jwt_decode(res.credential);
         const latitude  = position.coords.latitude;
         const longitude = position.coords.longitude;
-        console.log(latitude);
         resJson.long = longitude;
         resJson.lat = latitude;
 
