@@ -41,7 +41,9 @@ app.post('/start-session', async (req, res) => {
     else {
         console.log("session unavailable. Are you logged in?");
     }
-    res.redirect('/');
+    // return res.redirect('/');
+    res.redirect('back');
+
 });
 
 app.get('/', async (req, res) => {
@@ -61,11 +63,11 @@ app.get('/', async (req, res) => {
     if (sesh && sesh.lat && sesh.long) {
         console.log("sorting by location");
         console.log(sesh.lat, sesh.long);
-        const viewerCoords = [sesh.lat, sesh.long];
+        const viewerCoords = { latitude: sesh.lat, longitude: sesh.long };
         function getShorterDistance(a, b) {
             if (a.lat && a.long && b.lat && b.long) {
-                const aCoords = [a.lat, a.long];
-                const bCoords = [b.lat, b.long];
+                const aCoords = { latitude: a.lat, longitude: a.long };
+                const bCoords = { latitude: b.lat, longitude: b.long };
                 if (haversine(viewerCoords, aCoords) < haversine(viewerCoords, bCoords))
                     return -1;
                 return 1;
