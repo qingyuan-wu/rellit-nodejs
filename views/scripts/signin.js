@@ -10,6 +10,8 @@ function handleCredentialResponse(res) {
         xhr.open("POST", "/start-session", true);
         xhr.setRequestHeader('Content-Type', 'application/json');
         xhr.send(JSON.stringify(resJson));
+
+        window.location.reload()
     })
 }
 
