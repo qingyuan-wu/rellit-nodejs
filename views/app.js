@@ -1,3 +1,6 @@
+//This file is being hosted by another domain but is projected to the website thanks to Iframes.
+
+
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
