@@ -41,7 +41,7 @@ app.post('/start-session', async (req, res) => {
     else {
         console.log("session unavailable. Are you logged in?");
     }
-    res.redirect('/');
+    return res.redirect('/');
 });
 
 app.get('/', async (req, res) => {
