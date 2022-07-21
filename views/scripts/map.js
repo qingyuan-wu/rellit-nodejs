@@ -3,7 +3,6 @@ async function initMap() {
     fetch('/my-location')
         .then(response => response.json)
         .then(location => {
-            console.log(location.lat);
             if (parseFloat(location.lat) !== -1 || parseFloat(location.long) !== -1) {
                 // location is available
                 center = { lat: parseFloat(location.lat), lng: parseFloat(location.long) };
