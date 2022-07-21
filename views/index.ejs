@@ -11,12 +11,22 @@
     <script src="saveLocation.js"></script>
     <script src="jwt-decode.js"></script>
     <script src="script.js"></script>
+    <script type="module" src="map.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDAne4VuS-kDNrI6kLzyzmdhQIs8j6ao7Q&callback=initMap&v=weekly"
+    defer
+  ></script>
     <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
     <meta name="google-signin-client_id" content="859550291312-jmcarebfcc8hrqkq4c1p7t5qt5cj7l5f.apps.googleusercontent.com">
 
     <title>Rellit</title>
     <style>
+        html {
+            scroll-behavior: smooth;
+        }
         .hidden {
             display:none;
             position: sticky;
@@ -41,10 +51,15 @@
             position: sticky;
             top: 0;
         }
-        #ask-question {
+        #select-city-dropdown {
+            margin-top:0;
             position: sticky;
             top: 0;
         }
+        /* #ask-question {
+            position: sticky;
+            top: 0;
+        } */
         .replies-text {
             font-size:90%;
             font-weight:700;
@@ -60,8 +75,19 @@
         .number-of-replies {
             float:right;
         }
-        .column-2 {
+        #questions-column {
             background-color: #5bc0de;
+            border-radius:20px;
+        }
+        #map-column {
+            padding:0;
+            margin:0;
+            position:sticky;
+            background-color:rgb(6, 178, 247);
+            border-radius:20px;
+        }
+        #replies-column {
+            border-radius:20px;
         }
         body {
             font-family: sans-serif;
@@ -100,6 +126,15 @@
             margin-bottom: 10px;
             box-sizing: inherit;
         }
+        #map {
+            height:95vh;
+            margin:0;
+            padding:0;                
+        }
+        #map-container {
+            position: sticky;
+            top: 20px; 
+        }
     </style>
 </head>
 <body>
@@ -118,6 +153,12 @@
             previousQuestionContainer = questionContainer;
             previouReplyContainer = replyContainer;
         }
+        function scrollToQuestion(questionId) {
+            const currentQuestion = document.getElementById(`question-container-${questionId}`);
+            const prevQuestionId = currentQuestion.previousElementSibling.id;
+            //`question-container-${questionId}`
+            location.hash=prevQuestionId;
+        }
 
         document.addEventListener("DOMContentLoaded", function () {
             setFormFieldsWithGeolocation();
@@ -125,6 +166,7 @@
             const displayQuestion = urlParams.get('question');
             if (displayQuestion !== null) {
                 displayResponses(displayQuestion);
+                scrollToQuestion(displayQuestion);
             }
         });    
 
@@ -136,15 +178,49 @@
                 document.getElementById("lat_question").value = lat;
             });
         }
+
+    // $(document).ready(function() {
+    //     //Global Variables
+    //     var mapCentre;
+    //     var map;
+
+    //     initialize();
+
+    //     function initialize() {
+    //         var mapOptions;
+
+    //         if (localStorage.mapLat != null && localStorage.mapLng != null && localStorage.mapZoom != null){
+    //             mapOptions = {
+    //                 center: new google.maps.LatLng(localStorage.mapLat,localStorage.mapLng),
+    //                 zoom: parseInt(localStorage.mapZoom),
+    //                 scaleControl: true
+    //             };
+    //         }
+    //         else {
+    //             //Choose some default options
+    //             mapOptions = {
+    //                 center: new google.maps.LatLng(0,0),
+    //                 zoom: 11,
+    //                 scaleControl: true
+    //             };
+    //         }
+    //     }
+    // })
     </script>
 
     <%- include('partials/header.ejs') %>
     <div class="container mt-5">       
           <div class="row">
-            <div class="d-none d-lg-block col-5 mx-2 p-3 mb-2">
-              MAP
+            <div class="d-none d-lg-block col-5 mx-2 p-3 mb-2" id="map-column">
+                <div id="map-container">
+                    <div id="map">
+    
+                    </div>
+                    
+                </div>
+             
             </div>
-            <div class="col-sm mx-2 p-3 mb-23 mb-2 text-dark" style="background: radial-gradient(circle, rgb(251, 252, 253)  0%, rgb(61, 114, 173) 100%)">
+            <div class="col-sm mx-2 p-3 mb-23 mb-2 text-dark" id="questions-column" style="background: radial-gradient(circle, rgb(251, 252, 253)  0%, rgb(61, 114, 173) 100%)">
               <form method="POST" action="/new-question" class="form-group" id="ask-question">
                     <label for="formGroupExampleInput">What are you curious about?</label>
                     <input type="hidden" name="long" id="long_question">
@@ -161,7 +237,8 @@
             <% } %>
             </div>
             <div id="replies-column" class="col-sm mx-2 pvs-3 mb-2 bg-secondary text-white">
-              <div id="chat-title">Replies</div>
+              <div id="chat-title">
+                Replies</div>
               <% for (let i=0; i < data.length ; i++) { %>
                 <div class="hidden replies-container" id="replies-for-<%= data[i].questionId %>">
                     <div>
@@ -185,13 +262,12 @@
 
             </div>
           </div>
-        </div>
+        
     </div>
     <%
         function formatTime(time) {
             return time.toString().slice(0, 21);
         }
     %>
-    
 </body>
 </html>

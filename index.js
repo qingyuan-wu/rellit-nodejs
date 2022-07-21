@@ -41,9 +41,7 @@ app.post('/start-session', async (req, res) => {
     else {
         console.log("session unavailable. Are you logged in?");
     }
-    // return res.redirect('/');
-    res.redirect('back');
-
+    return res.redirect('/');
 });
 
 app.get('/', async (req, res) => {
@@ -163,8 +161,35 @@ app.get("/meet", (req, res) => {
 });
 
 app.get("/faq", (req, res) => {
-    var sesh = "";
+    const sesh = "";
     return res.render("faq", {sessionStuff: sesh});
+});
+
+app.get("/questions", async (req, res) => {
+    const queryGetQuestions = datastore.createQuery("Question");
+    const [questions] = await datastore.runQuery(queryGetQuestions);
+    const questionsWithIds = await Promise.all(questions.map(async q => { 
+        const questionId = q[datastore.KEY].id;
+        return {
+            "questionId": questionId,
+            "text": q.text,
+            "time": q.time,
+            "lat": q.lat,
+            "long": q.long
+        };   
+    }));
+
+    res.json(questionsWithIds);
+});
+
+app.get("/my-location", (req, res) => {
+    const sesh = req.session;
+    console.log(sesh);
+    if (sesh && sesh.lat && sesh.long) {
+        console.log(sesh.lat, sesh.long);
+        return res.json({ lat: sesh.lat, long: sesh.long });
+    }
+    return res.json({ lat: '-1', long: '-1' });
 });
 
 app.listen(port, () => {
