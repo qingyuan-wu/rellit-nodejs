@@ -60,9 +60,7 @@ app.get('/', async (req, res) => {
         descending: true
     });
     const [questions] = await datastore.runQuery(queryGetQuestions);
-    if (sesh && sesh.lat && sesh.long) {
-        console.log("sorting by location");
-        console.log(sesh.lat, sesh.long);
+    if (sesh && sesh.lat && sesh.long) {        
         const viewerCoords = { latitude: sesh.lat, longitude: sesh.long };
         function getShorterDistance(a, b) {
             if (a.lat && a.long && b.lat && b.long) {
@@ -165,6 +163,23 @@ app.get("/meet", (req, res) => {
 app.get("/faq", (req, res) => {
     var sesh = "";
     return res.render("faq", {sessionStuff: sesh});
+});
+
+app.get("/questions", async (req, res) => {
+    const queryGetQuestions = datastore.createQuery("Question");
+    const [questions] = await datastore.runQuery(queryGetQuestions);
+    const questionsWithIds = await Promise.all(questions.map(async q => { 
+        const questionId = q[datastore.KEY].id;
+        return {
+            "questionId": questionId,
+            "text": q.text,
+            "time": q.time,
+            "lat": q.lat,
+            "long": q.long
+        };
+    }));
+
+    res.json(questionsWithIds);
 });
 
 app.listen(port, () => {
