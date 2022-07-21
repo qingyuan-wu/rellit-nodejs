@@ -15,6 +15,7 @@ async function initMap() {
         const map = new google.maps.Map(document.getElementById("map"), {
             zoom: 10,
             center: center,
+            gestureHandling: "greedy",
         });
 //   const infoWindow = new google.maps.InfoWindow({
 //     content: "helloooooo",
