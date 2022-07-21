@@ -1,12 +1,9 @@
-// import { MarkerClusterer } from "./../../node_modules/@googlemaps/markerclusterer";
-// const markerCluster = new MarkerClusterer({ map, markers });
-   
-// [START maps_marker_clustering]
 async function initMap() {
     let center = { lat: 43.5, lng: -79.4 };
     fetch('/my-location')
         .then(response => response.json)
         .then(location => {
+            console.log(location.lat);
             if (parseFloat(location.lat) !== -1 || parseFloat(location.long) !== -1) {
                 // location is available
                 center = { lat: parseFloat(location.lat), lng: parseFloat(location.long) };
@@ -17,10 +14,7 @@ async function initMap() {
             center: center,
             gestureHandling: "greedy",
         });
-//   const infoWindow = new google.maps.InfoWindow({
-//     content: "helloooooo",
-//     disableAutoPan: true,
-//   });
+
     fetch('/questions')
         .then(response => response.json())
         .then(questions => {

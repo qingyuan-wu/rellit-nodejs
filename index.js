@@ -41,9 +41,7 @@ app.post('/start-session', async (req, res) => {
     else {
         console.log("session unavailable. Are you logged in?");
     }
-    // return res.redirect('/');
-    res.redirect('back');
-
+    return res.redirect('/');
 });
 
 app.get('/', async (req, res) => {
@@ -186,11 +184,12 @@ app.get("/questions", async (req, res) => {
 
 app.get("/my-location", (req, res) => {
     const sesh = req.session;
-    if (sesh.lat && sesh.long) {
+    console.log(sesh);
+    if (sesh && sesh.lat && sesh.long) {
+        console.log(sesh.lat, sesh.long);
         return res.json({ lat: sesh.lat, long: sesh.long });
     }
     return res.json({ lat: '-1', long: '-1' });
-    
 });
 
 app.listen(port, () => {
