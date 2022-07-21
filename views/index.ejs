@@ -13,6 +13,10 @@
     <script src="script.js"></script>
     <script type="module" src="map.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDAne4VuS-kDNrI6kLzyzmdhQIs8j6ao7Q&callback=initMap&v=weekly"
+    defer
+  ></script>
     <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
     <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
     <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
@@ -142,6 +146,34 @@
                 document.getElementById("lat_question").value = lat;
             });
         }
+
+    // $(document).ready(function() {
+    //     //Global Variables
+    //     var mapCentre;
+    //     var map;
+
+    //     initialize();
+
+    //     function initialize() {
+    //         var mapOptions;
+
+    //         if (localStorage.mapLat != null && localStorage.mapLng != null && localStorage.mapZoom != null){
+    //             mapOptions = {
+    //                 center: new google.maps.LatLng(localStorage.mapLat,localStorage.mapLng),
+    //                 zoom: parseInt(localStorage.mapZoom),
+    //                 scaleControl: true
+    //             };
+    //         }
+    //         else {
+    //             //Choose some default options
+    //             mapOptions = {
+    //                 center: new google.maps.LatLng(0,0),
+    //                 zoom: 11,
+    //                 scaleControl: true
+    //             };
+    //         }
+    //     }
+    // })
     </script>
 
     <%- include('partials/header.ejs') %>
@@ -198,9 +230,5 @@
             return time.toString().slice(0, 21);
         }
     %>
-    <script
-      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDAne4VuS-kDNrI6kLzyzmdhQIs8j6ao7Q&callback=initMap&v=weekly"
-      defer
-    ></script>
 </body>
 </html>

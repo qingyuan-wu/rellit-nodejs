@@ -1,69 +1,67 @@
-// import { MarkerClusterer } from "@googlemaps/markerclusterer";
-//If you comment out import, the map shows. 
-
-/* Fiddling with datastore
-const {Datastore} = require('@google-cloud/datastore');
-const datastore = new Datastore(); 
-
-const queryQuestions = datastore.createQuery("Question"); */
-
+// import { MarkerClusterer } from "./../../node_modules/@googlemaps/markerclusterer";
+// const markerCluster = new MarkerClusterer({ map, markers });
+   
 // [START maps_marker_clustering]
-function initMap() {
-  const map = new google.maps.Map(document.getElementById("map"), {
-    zoom: 3,
-    center: { lat: -28.024, lng: 140.887 },
-  });
-  const infoWindow = new google.maps.InfoWindow({
-    content: "",
-    disableAutoPan: true,
-  });
-  // Create an array of alphabetical characters used to label the markers.
-  const labels = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-  // Add some markers to the map.
-  const markers = locations.map((position, i) => {
-    const label = labels[i % labels.length];
-    const marker = new google.maps.Marker({
-      position,
-      label,
-    });
+async function initMap() {
+    let center = { lat: 43.5, lng: -79.4 };
+    fetch('/my-location')
+        .then(response => response.json)
+        .then(location => {
+            if (parseFloat(location.lat) !== -1 || parseFloat(location.long) !== -1) {
+                // location is available
+                center = { lat: parseFloat(location.lat), lng: parseFloat(location.long) };
+            }
+        });
+        const map = new google.maps.Map(document.getElementById("map"), {
+            zoom: 10,
+            center: center,
+        });
+//   const infoWindow = new google.maps.InfoWindow({
+//     content: "helloooooo",
+//     disableAutoPan: true,
+//   });
+    fetch('/questions')
+        .then(response => response.json())
+        .then(questions => {
+            for (const question of questions) {
+                if(typeof question.lat === "string" && typeof question.long === "string") {
+                    const marker = new google.maps.Marker({
+                        position: { lat: parseFloat(question.lat), lng: parseFloat(question.long) },
+                        map,
+                        url: `/?question=${question.questionId}`,
+                        title: question.text,
+                    });
+                    google.maps.event.addListener(marker, 'click', function() {
+                        window.location.href = marker.url;
+                    });
+                }
+            }
+        });
 
-    // markers can only be keyboard focusable when they have click listeners
-    // open info window when marker is clicked
-    marker.addListener("click", () => {
-      infoWindow.setContent(label);
-      infoWindow.open(map, marker);
-    });
-    return marker;
-  });
+    // const mapCentre = map.getCenter();
 
-  // Add a marker clusterer to manage the markers.
-  new MarkerClusterer({ markers, map });
+    // //Set local storage variables.
+    // localStorage.mapLat = mapCentre.lat();
+    // localStorage.mapLng = mapCentre.lng();
+    // localStorage.mapZoom = map.getZoom();
+
+    // google.maps.event.addListener(map,"center_changed", function() {
+    //     //Set local storage variables.
+    //     mapCentre = map.getCenter();
+
+    //     localStorage.mapLat = mapCentre.lat();
+    //     localStorage.mapLng = mapCentre.lng();
+    //     localStorage.mapZoom = map.getZoom();    
+    // });
+
+    // google.maps.event.addListener(map,"zoom_changed", function() {
+    //     //Set local storage variables.
+    //     mapCentre = map.getCenter();
+
+    //     localStorage.mapLat = mapCentre.lat();
+    //     localStorage.mapLng = mapCentre.lng();
+    //     localStorage.mapZoom = map.getZoom();     
+    // });
 }
-
-const locations = [
-  { lat: -31.56391, lng: 147.154312 },
-  { lat: -33.718234, lng: 150.363181 },
-  { lat: -33.727111, lng: 150.371124 },
-  { lat: -33.848588, lng: 151.209834 },
-  { lat: -33.851702, lng: 151.216968 },
-  { lat: -34.671264, lng: 150.863657 },
-  { lat: -35.304724, lng: 148.662905 },
-  { lat: -36.817685, lng: 175.699196 },
-  { lat: -36.828611, lng: 175.790222 },
-  { lat: -37.75, lng: 145.116667 },
-  { lat: -37.759859, lng: 145.128708 },
-  { lat: -37.765015, lng: 145.133858 },
-  { lat: -37.770104, lng: 145.143299 },
-  { lat: -37.7737, lng: 145.145187 },
-  { lat: -37.774785, lng: 145.137978 },
-  { lat: -37.819616, lng: 144.968119 },
-  { lat: -38.330766, lng: 144.695692 },
-  { lat: -39.927193, lng: 175.053218 },
-  { lat: -41.330162, lng: 174.865694 },
-  { lat: -42.734358, lng: 147.439506 },
-  { lat: -42.734358, lng: 147.501315 },
-  { lat: -42.735258, lng: 147.438 },
-  { lat: -43.999792, lng: 170.463352 },
-];
 
 window.initMap = initMap;
