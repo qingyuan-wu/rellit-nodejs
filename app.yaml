@@ -1,1 +1,6 @@
 runtime: nodejs16
+
+handlers:
+- url: /favicon.ico
+  static_files: public/images/favicon.ico
+  upload: public/images/favicon.ico

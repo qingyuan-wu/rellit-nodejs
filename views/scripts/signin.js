@@ -3,17 +3,15 @@ function handleCredentialResponse(res) {
         let resJson = jwt_decode(res.credential);
         const latitude  = position.coords.latitude;
         const longitude = position.coords.longitude;
-        console.log(latitude);
-        console.log("hellooooo");
         resJson.long = longitude;
         resJson.lat = latitude;
 
-        document.getElementById("custom-greeting").innerHTML = `Hello ${resJson.given_name}!`;
-
         var xhr = new XMLHttpRequest();
-        xhr.open("POST", "/login", true);
+        xhr.open("POST", "/start-session", true);
         xhr.setRequestHeader('Content-Type', 'application/json');
         xhr.send(JSON.stringify(resJson));
+
+        window.location.reload()
     })
 }
 

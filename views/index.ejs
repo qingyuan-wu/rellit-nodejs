@@ -12,6 +12,7 @@
     <script src="jwt-decode.js"></script>
     <script src="script.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
     <meta name="google-signin-client_id" content="859550291312-jmcarebfcc8hrqkq4c1p7t5qt5cj7l5f.apps.googleusercontent.com">
 
     <title>Rellit</title>
@@ -62,7 +63,7 @@
         .column-2 {
             background-color: #5bc0de;
         }
-        body{
+        body {
             font-family: sans-serif;
             background-color: rgb(238,174,202);
             background: radial-gradient(circle, rgb(61, 114, 173) 0%, rgb(251, 252, 253) 100%);
@@ -86,18 +87,18 @@
             background-color: linear-gradient(rgb(100, 133, 143), lightskyblue);
             box-shadow: 0 4px #43474e05;
         }
-        .orange-button:hover{
+        .orange-button:hover {
 	        box-shadow: 0 2px #d19c57;
         }
-        .orange-button:active{
+        .orange-button:active {
 	        box-shadow: 0 0px #d19c57;
         }
-        input{
+        input {
             padding: 10px;
             border-radius: 10px;
             border: 2px solid #cccccc;
             margin-bottom: 10px;
-            box-sizing:inherit;
+            box-sizing: inherit;
         }
     </style>
 </head>
@@ -119,16 +120,26 @@
         }
 
         document.addEventListener("DOMContentLoaded", function () {
+            setFormFieldsWithGeolocation();
             const urlParams = new URLSearchParams(window.location.search);
             const displayQuestion = urlParams.get('question');
             if (displayQuestion !== null) {
                 displayResponses(displayQuestion);
             }
-        });      
+        });    
+
+        function setFormFieldsWithGeolocation() {
+            navigator.geolocation.getCurrentPosition(position => { 
+                const lat = position.coords.latitude;
+                const long = position.coords.longitude;
+                document.getElementById("long_question").value = long;
+                document.getElementById("lat_question").value = lat;
+            });
+        }
     </script>
 
     <%- include('partials/header.ejs') %>
-    <div class="container mt-5">
+    <div class="container mt-5">       
           <div class="row">
             <div class="d-none d-lg-block col-sm mx-2 p-3 mb-2 bg-secondary text-white">
               MAP
@@ -136,6 +147,8 @@
             <div class="col-sm mx-2 p-3 mb-23 mb-2 text-dark" style="background: radial-gradient(circle, rgb(251, 252, 253)  0%, rgb(61, 114, 173) 100%)">
               <form method="POST" action="/new-question" class="form-group" id="ask-question">
                     <label for="formGroupExampleInput">What are you curious about?</label>
+                    <input type="hidden" name="long" id="long_question">
+                    <input type="hidden" name="lat" id="lat_question">
                     <input type="text" name="question" class="form-control" id="formGroupExampleInput">
                     <input class="orange-button" type="submit" class="btn btn-primary" value="Submit">
               </form>
