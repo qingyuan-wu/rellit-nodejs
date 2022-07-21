@@ -27,6 +27,9 @@
         html {
             scroll-behavior: smooth;
         }
+        h6 {
+            font-weight:600;
+        }
         .hidden {
             display:none;
             position: sticky;
@@ -61,12 +64,14 @@
             top: 0;
         } */
         .replies-text {
-            font-size:90%;
-            font-weight:700;
-        }
-        .reply-time {
             font-size:80%;
             font-weight:300;
+            color:black;
+        }
+        .reply-time {
+            font-size:75%;
+            font-weight:300;
+            color:black;
         }
         .reply-time-span {
             clear:both;
@@ -78,6 +83,7 @@
         #questions-column {
             background-color: #5bc0de;
             border-radius:20px;
+            font-size:15px;
         }
         #map-column {
             padding:0;
@@ -230,7 +236,7 @@
               </form>
               <% for (let i=0; i < data.length; i++) { %>
                 <div class="question-container" id="question-container-<%= data[i].questionId %>" style="cursor: pointer;" onclick="displayResponses('<%= data[i].questionId %>')">
-                    <h3><%= data[i].text %></h3>
+                    <h6><%= data[i].text %></h6>
                     <span class="number-of-replies">Replies: <%= data[i]["replies"].length %></span>
                     <small><%= formatTime(data[i].time) %></small>
                 </div>     
@@ -242,7 +248,7 @@
               <% for (let i=0; i < data.length ; i++) { %>
                 <div class="hidden replies-container" id="replies-for-<%= data[i].questionId %>">
                     <div>
-                        <h4><%= data[i].text %></h4>
+                        <h6><%= data[i].text %></h6>
                     </div>
                     <% for (let j=0; j < data[i]["replies"].length; j++) { %>
                         <div>
