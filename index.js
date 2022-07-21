@@ -162,6 +162,11 @@ app.get("/meet", (req, res) => {
     return res.render("meet", {sessionStuff: sessionStatus });
 });
 
+app.get("/faq", (req, res) => {
+    var sesh = "";
+    return res.render("faq", {sessionStuff: sesh});
+});
+
 app.listen(port, () => {
     console.log(`Server listening on port ${port}`);
 });
