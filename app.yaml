@@ -2,5 +2,5 @@ runtime: nodejs16
 
 handlers:
 - url: /favicon.ico
-  static_files: static/images/favicon.ico
-  upload: static/images/favicon.ico
+  static_files: public/images/favicon.ico
+  upload: public/images/favicon.ico
