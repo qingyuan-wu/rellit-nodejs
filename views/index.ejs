@@ -14,15 +14,15 @@
     <script src="saveLocation.js"></script>
     <script src="jwt-decode.js"></script>
     <script src="script.js"></script>
+    <%- include('./scripts/loadermain'); %>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="jquery-2.1.4.js"></script>
     <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
     <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>  
     <meta name="google-signin-client_id" content="859550291312-jmcarebfcc8hrqkq4c1p7t5qt5cj7l5f.apps.googleusercontent.com">
 
     <title>Rellit</title>
     <style>
-
-
         .hidden {
             display:none;
             position: sticky;
@@ -145,17 +145,23 @@
                 document.getElementById("lat_question").value = lat;
             });
         }
+        $.get("/assets/html/loader.html", function(data){
+  $("#loading").replaceWith(data);
+});
+$(window).on('load', function(){
+  setTimeout(removeLoader, 2000); //wait for page load PLUS two seconds.
+});
+function removeLoader(){
+    $( ".loader-wrapper" ).fadeOut(500, function() {
+      // fadeOut complete. Remove the loading div
+      $( ".loader-wrapper" ).remove(); //makes page more lightweight 
+  });   
+}
     </script>
-
+  
     <%- include('partials/header.ejs') %>
-
-    <div class="spinner-wrapper">
-        <div class="spinner">
-            <div class="cube1"></div>
-            <div class="cube2"></div>
-          </div>
-    </div>
-
+    <div id="loading">
+    </div> 
     <div class="container mt-3">       
           <div class="row">
             <div class="d-none d-lg-block col-3 mx-6 p-3 mb-2 bg-dark mt-5" style="border-radius:25px;">
@@ -209,16 +215,5 @@
             return time.toString().slice(0, 21);
         }
     %>
-    <script>
-        $(document).ready(function() {
-        //Preloader
-        preloaderFadeOutTime = 3000;
-        function hidePreloader() {
-        var preloader = $('.spinner-wrapper');
-        preloader.fadeOut(preloaderFadeOutTime);
-        }
-        hidePreloader();
-        });
-        </script>
 </body>
 </html>
