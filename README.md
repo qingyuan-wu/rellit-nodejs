@@ -1,3 +1,11 @@
+# Rellit - So Close, Yet So Far
+
+[Check it out now!](https://summer22-sps-52.appspot.com/)
+
+*Rellit* allows you to ask questions and reply to questions anonymously. You will see questions closest to you, so only the most relevant ones. Think asking a question is too slow? Head over to the live chat and chat in real time, lightning speed.
+
+Built by: Raymond, Sal, Desmond, Qingyuan - Google SPS Team 52 Summer '22
+
 ## Setup Node.js in your Local Environment
 1. Clone this repository `git clone <repo-link>`
 2. Navigate Inside the Repo with `cd rellit`
@@ -7,7 +15,8 @@
     - if you are fine with manually re-running the server each time, you can run `node index.js`
     - Click on "Web Preview" near the top-right corner and "Preview on Port 8080"
 5. Ready to deploy? Run `gcloud app deploy`
-    - you might get an error and have to set the project with `gcloud config set project summer22-sps-52`
+
+- you will get an error if you do not configure your project. Set the project with `gcloud config set project summer22-sps-52`
 
 ## Generating New Indices
 * new indices may be required to run complex queries, such as the one below:
@@ -43,6 +52,14 @@ gcloud datastore indexes create index.yaml
 gcloud beta code dev
 ```
 * [This article](https://stackoverflow.com/questions/56598069/nodejs-google-vision-is-unable-to-detect-a-project-id-in-the-current-environment) might have useful info on an unable to detect project Id error
+
+## Technologies
+* `Node.js` and `Express.js` backend
+* Google Datastore - NoSQL database to store questions and replies
+* `ejs` template engine
+* Bootstrap
+* Google Maps API
+* `Firestore` backend for live chat feature
 
 ## Known Issues
 * When in development, each time you refresh the server (including auto-refresh by nodemon), the session will terminate
